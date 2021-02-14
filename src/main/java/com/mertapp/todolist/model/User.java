@@ -1,13 +1,13 @@
 package com.mertapp.todolist.model;
 
+import lombok.Data;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "user")
 public class User {
@@ -15,12 +15,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, unique = true, length = 30)
     private String username;
 
     @Column(nullable = false, unique = true, length = 40)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 40)
+    @Column(nullable = false, length = 120)
     private String password;
 }
