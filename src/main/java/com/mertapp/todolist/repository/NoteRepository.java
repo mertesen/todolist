@@ -12,8 +12,8 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findNotesByUserid(Long id);
 
     @Modifying
-    @Query("update Note n set n.text = :text where n.id = :id and n.userid = :userid")
-    void updateNoteWithId(@Param("text") String text, @Param("id") Long noteid, @Param("userid") Long userid);
+    @Query("update Note n set n.text = :text, n.status = :status where n.id = :id and n.userid = :userid")
+    void updateNoteWithId(@Param("text") String text, @Param("status") String status, @Param("id") Long noteid, @Param("userid") Long userid);
 
     @Modifying
     @Query("delete from Note n where n.id = :id  and n.userid = :userid")

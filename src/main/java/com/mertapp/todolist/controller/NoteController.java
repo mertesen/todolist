@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,14 +24,14 @@ public class NoteController {
     }
 
     @GetMapping("/list")
-    public List<Note> getAllItems(@Valid @RequestBody NoteRequest request) {
+    public List<Note> getAllItems() {
         return noteRepository.findNotesByUserid(getUserDetailsFromSession().getId());
     }
 
     @PostMapping("/updatenote")
     @Transactional
     public void updateNote(@Valid @RequestBody NoteRequest request) {
-        noteRepository.updateNoteWithId(request.getText(), request.getId(), getUserDetailsFromSession().getId());
+        noteRepository.updateNoteWithId(request.getText(), request.getStatus(), request.getId(), getUserDetailsFromSession().getId());
     }
 
     @PostMapping("/insertnote")
@@ -39,13 +40,15 @@ public class NoteController {
         note.setText(request.getText());
         note.setUserid(getUserDetailsFromSession().getId());
         note.setStatus("O");
+        note.setInsert_date(new Date());
+        note.setUpdate_date(new Date());
         Note responseNote = noteRepository.save(note);
         return new NoteResponse(responseNote.getId(), responseNote.getUserid(), responseNote.getText(), responseNote.getStatus(), responseNote.getInsert_date(), responseNote.getUpdate_date());
     }
 
-    @DeleteMapping("/deletenote")
+    @PostMapping("/deletenote")
     @Transactional
-    public void deleteNote(@Valid @RequestBody NoteRequest request) {
+    public void deleteNote(@RequestBody NoteRequest request) {
         noteRepository.deleteNoteWithId(request.getId(), getUserDetailsFromSession().getId());
     }
 

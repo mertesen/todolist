@@ -51,7 +51,7 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
@@ -60,14 +60,14 @@ public class UserController {
     }
     private void createUser(SignupRequest signupRequest) {
         User user = new User();
-        user.setUsername(signupRequest.getUserName());
+        user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         userRepository.save(user);
     }
 
     private boolean checkUserExist(SignupRequest signupRequest) {
-        return checkUserNameExist(signupRequest.getUserName()) || checkEmailExist(signupRequest.getEmail());
+        return checkUserNameExist(signupRequest.getUsername()) || checkEmailExist(signupRequest.getEmail());
     }
 
     private boolean checkEmailExist(String email) {
