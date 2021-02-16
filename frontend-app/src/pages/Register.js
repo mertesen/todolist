@@ -19,7 +19,7 @@ export default function Register() {
 
     const register = (e) => {
         e.preventDefault();
-        fetch("http://localhost:8080/api/user/register",{
+        fetch("https://spring-react-mysql-todo-app.herokuapp.com/api/user/register",{
             method:"POST",
             headers: {
                 "Content-Type":"application/json",
