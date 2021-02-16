@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/user/";
+const API_URL = "https://spring-react-mysql-todo-app.herokuapp.com/api/user/";
 
 const register = (email, username, password) => {
     return axios.post(API_URL + "register", {

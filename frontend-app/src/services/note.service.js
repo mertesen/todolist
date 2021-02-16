@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from './auth-header';
 
-const API_URL = "http://localhost:8080/api/note/";
+const API_URL = "https://spring-react-mysql-todo-app.herokuapp.com/api/note/";
 
 const list = () => {
     return axios.get(API_URL + "list", { headers: authHeader() }).then((response) => {return response.data});
