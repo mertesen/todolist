@@ -8,6 +8,8 @@ import com.mertapp.todolist.payload.response.MessageResponse;
 import com.mertapp.todolist.repository.UserRepository;
 import com.mertapp.todolist.security.jwt.JwtUtils;
 import com.mertapp.todolist.security.services.UserDetailsImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/user")
+@Api(value = "User Api documentation")
 public class UserController {
 
     @Autowired
@@ -41,6 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @ApiOperation(value = "register operation user")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         if (!checkUserExist(signupRequest)) {
             createUser(signupRequest);
@@ -50,6 +54,7 @@ public class UserController {
     }
 
     @PostMapping("login")
+    @ApiOperation(value = "login operation user")
     public ResponseEntity<JwtResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -76,34 +81,5 @@ public class UserController {
 
     private boolean checkUserNameExist(String userName) {
         return userRepository.existsByUsername(userName);
-    }
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable(value = "id") long userId) throws Exception {
-        return this.userRepository.findById(userId).orElseThrow(Exception::new);
-    }
-
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return this.userRepository.save(user);
-    }
-
-    @PutMapping("/{id}")
-    public User updateUser(@RequestBody User user, @PathVariable("id") long userId) throws Exception {
-        User existingUser = this.userRepository.findById(userId).orElseThrow(Exception::new);
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        return this.userRepository.save(existingUser);
-    }
-
-    @GetMapping("/{email}")
-    public User getUserByEmail(@PathVariable("email") String email) {
-        return this.userRepository.findUserByEmail(email);
     }
 }

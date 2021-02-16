@@ -5,6 +5,8 @@ import com.mertapp.todolist.payload.request.NoteRequest;
 import com.mertapp.todolist.payload.response.NoteResponse;
 import com.mertapp.todolist.repository.NoteRepository;
 import com.mertapp.todolist.security.services.UserDetailsImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/note")
+@Api(value = "Note Api documentation")
 public class NoteController {
     private final NoteRepository noteRepository;
 
@@ -24,17 +27,20 @@ public class NoteController {
     }
 
     @GetMapping("/list")
+    @ApiOperation(value = "list all notes operation")
     public List<Note> getAllItems() {
         return noteRepository.findNotesByUserid(getUserDetailsFromSession().getId());
     }
 
     @PostMapping("/updatenote")
     @Transactional
+    @ApiOperation(value = "update note status and text operation")
     public void updateNote(@Valid @RequestBody NoteRequest request) {
         noteRepository.updateNoteWithId(request.getText(), request.getStatus(), request.getId(), getUserDetailsFromSession().getId());
     }
 
     @PostMapping("/insertnote")
+    @ApiOperation(value = "insert new note operation")
     public NoteResponse insertNote(@Valid @RequestBody NoteRequest request) {
         Note note = new Note();
         note.setText(request.getText());
@@ -48,6 +54,7 @@ public class NoteController {
 
     @PostMapping("/deletenote")
     @Transactional
+    @ApiOperation(value = "delete note operation")
     public void deleteNote(@RequestBody NoteRequest request) {
         noteRepository.deleteNoteWithId(request.getId(), getUserDetailsFromSession().getId());
     }
